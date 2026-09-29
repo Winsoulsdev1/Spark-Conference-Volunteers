@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volunteer — Spark Conference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF7EE;
+    --ink:#15161A;
+    --blue:#2D4CFF;
+    --coral:#FF5A36;
+    --yellow:#FFCE33;
+    --line:#15161A;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family:'Archivo Black', sans-serif;
+    font-weight:400;
+    line-height:1.02;
+    letter-spacing:-0.01em;
+  }
+  .mono{
+    font-family:'Space Mono', monospace;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 24px;}
+
+  /* halftone texture strip */
+  .dots{
+    background-image:radial-gradient(var(--ink) 1.4px, transparent 1.4px);
+    background-size:14px 14px;
+    height:14px;
+    width:100%;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:64px 24px 70px;
+    border-bottom:4px solid var(--ink);
+    overflow:hidden;
+  }
+  .hero::after{
+    content:'';
+    position:absolute;
+    top:-120px; right:-120px;
+    width:340px; height:340px;
+    background:var(--yellow);
+    border-radius:50%;
+    z-index:0;
+    opacity:0.9;
+  }
+  .hero-inner{position:relative; z-index:2; max-width:760px;}
+  .stamp{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:var(--ink);
+    color:var(--paper);
+    padding:8px 16px;
+    font-size:0.75rem;
+    margin-bottom:28px;
+    transform:rotate(-2deg);
+  }
+  .stamp::before{content:'⚡'; font-size:0.9rem;}
+  .hero h1{
+    font-size:clamp(2.6rem, 7vw, 5rem);
+    margin-bottom:22px;
+  }
+  .hero h1 span{
+    background:var(--blue);
+    color:var(--paper);
+    padding:0 10px;
+    display:inline-block;
+    transform:rotate(-1deg);
+  }
+  .hero p{
+    font-size:1.1rem;
+    max-width:520px;
+    margin-bottom:36px;
+    font-weight:500;
+  }
+  .btn-row{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:16px 26px;
+    font-family:'Work Sans', sans-serif;
+    font-weight:700;
+    font-size:0.95rem;
+    text-decoration:none;
+    cursor:pointer;
+    border:3px solid var(--ink);
+    background:var(--paper);
+    color:var(--ink);
+    transition:transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+    box-shadow:5px 5px 0 var(--ink);
+  }
+  .btn:hover{transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink);}
+  .btn:active{transform:translate(0,0); box-shadow:2px 2px 0 var(--ink);}
+  .btn-primary{background:var(--coral); color:var(--paper);}
+  .btn-blue{background:var(--blue); color:var(--paper);}
+
+  /* ---------- SECTION HEADS ---------- */
+  section{padding:80px 0;}
+  .section-head{max-width:640px; margin-bottom:50px;}
+  .section-tag{
+    color:var(--coral);
+    font-size:0.75rem;
+    margin-bottom:14px;
+    font-weight:700;
+  }
+  .section-head h2{
+    font-size:clamp(1.9rem, 4vw, 2.7rem);
+    margin-bottom:14px;
+  }
+  .section-head p{font-size:1.02rem; font-weight:500;}
+
+  /* ---------- UNITS ---------- */
+  .units{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:28px;
+  }
+  .unit-card{
+    background:var(--paper);
+    border:3px solid var(--ink);
+    padding:32px 28px;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    box-shadow:6px 6px 0 var(--ink);
+    transition:transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .unit-card:nth-child(1){ --tag:var(--blue); }
+  .unit-card:nth-child(2){ --tag:var(--coral); }
+  .unit-card:nth-child(3){ --tag:var(--yellow); }
+  .unit-card:nth-child(4){ --tag:var(--blue); }
+  .unit-card:hover{
+    transform:translate(-3px,-3px);
+    box-shadow:9px 9px 0 var(--ink);
+  }
+  .unit-card.active{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .unit-card.active .unit-tag{background:var(--yellow); color:var(--ink);}
+  .unit-card.active p{color:#D9D6CC;}
+  .unit-tag{
+    width:56px; height:56px;
+    background:var(--tag);
+    color:var(--ink);
+    border:3px solid var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Space Mono', monospace;
+    font-size:0.9rem;
+    font-weight:700;
+    flex-shrink:0;
+  }
+  .unit-card h3{font-size:1.25rem; margin-bottom:2px; font-family:'Archivo Black'; text-transform:none;}
+  .unit-card p{font-size:0.95rem; font-weight:500;}
+  .unit-card .cta-line{
+    margin-top:auto;
+    font-size:0.8rem;
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  /* ---------- FORM ---------- */
+  .form-section{
+    background:var(--ink);
+    color:var(--paper);
+    border-top:4px solid var(--ink);
+    border-bottom:4px solid var(--ink);
+  }
+  .form-section .section-tag{color:var(--yellow);}
+  .form-section .section-head p{color:#D9D6CC;}
+  form{max-width:560px; display:flex; flex-direction:column; gap:22px;}
+  .field label{
+    display:block;
+    font-size:0.78rem;
+    color:var(--yellow);
+    margin-bottom:8px;
+    font-family:'Space Mono', monospace;
+    letter-spacing:0.05em;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+  .field input, .field select, .field textarea{
+    width:100%;
+    background:var(--paper);
+    border:3px solid var(--paper);
+    color:var(--ink);
+    padding:14px 15px;
+    font-family:'Work Sans', sans-serif;
+    font-weight:500;
+    font-size:0.98rem;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none;
+    border-color:var(--coral);
+  }
+  .field textarea{resize:vertical; min-height:80px;}
+  .submit-btn{
+    align-self:flex-start;
+    background:var(--coral);
+    color:var(--ink);
+    border:3px solid var(--paper);
+    padding:16px 32px;
+    font-family:'Archivo Black', sans-serif;
+    font-size:1rem;
+    cursor:pointer;
+    box-shadow:5px 5px 0 var(--paper);
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .submit-btn:hover{transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--paper);}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:36px 0 50px;
+    font-size:0.88rem;
+    font-weight:500;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+
+  @media (max-width:720px){
+    .units{grid-template-columns:1fr;}
+    footer{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<div class="dots"></div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="stamp mono">Spark Conference · 30 Oct 2026</div>
+    <h1>Show up.<br><span>Spark</span> something.</h1>
+    <p>Spark Conference is student-run and volunteer-powered. Pick a unit below and you're on the crew.</p>
+    <div class="btn-row">
+      <a href="#volunteer" class="btn btn-primary">Volunteer now</a>
+      <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Spark%20Conference&dates=20261030/20261031&details=Spark%20Conference%20%E2%80%94%20student%20conference." target="_blank" class="btn">Add to Google Calendar</a>
+      <a href="data:text/calendar;charset=utf-8,BEGIN%3AVCALENDAR%0D%0AVERSION%3A2.0%0D%0APRODID%3A-//Spark%20Conference//Volunteer%20Signup//EN%0D%0ABEGIN%3AVEVENT%0D%0AUID%3Aspark-conference-2026%40sparkconference%0D%0ADTSTAMP%3A20260730T000000Z%0D%0ADTSTART%3BVALUE%3DDATE%3A20261030%0D%0ADTEND%3BVALUE%3DDATE%3A20261031%0D%0ASUMMARY%3ASpark%20Conference%0D%0ADESCRIPTION%3ASpark%20Conference%20%E2%80%94%20student%20conference.%0D%0AEND%3AVEVENT%0D%0AEND%3AVCALENDAR%0D%0A" download="spark-conference.ics" class="btn">Download .ics</a>
+    </div>
+  </div>
+</section>
+
+<section id="units">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag mono">Crew assignments</div>
+      <h2>Four units. One day.</h2>
+      <p>Tap a card to load it into the sign-up form below.</p>
+    </div>
+
+    <div class="units">
+      <div class="unit-card" data-unit="Protocol & Logistics Unit">
+        <div class="unit-tag">PL</div>
+        <h3>Protocol &amp; Logistics</h3>
+        <p>Venue setup, seating layout, transportation and moving parts before doors open and after they close.</p>
+        <div class="cta-line">SELECT UNIT →</div>
+      </div>
+
+      <div class="unit-card" data-unit="Ushering & Crowd Management Unit">
+        <div class="unit-tag">UC</div>
+        <h3>Ushering &amp; Crowd Management</h3>
+        <p>Guiding attendees, managing seating, and keeping order through every session.</p>
+        <div class="cta-line">SELECT UNIT →</div>
+      </div>
+
+      <div class="unit-card" data-unit="Publicity & Media Unit">
+        <div class="unit-tag">PM</div>
+        <h3>Publicity &amp; Media</h3>
+        <p>Promotion, social media, photography, and videography before, during, and after the conference.</p>
+        <div class="cta-line">SELECT UNIT →</div>
+      </div>
+
+      <div class="unit-card" data-unit="Registration Unit">
+        <div class="unit-tag">RG</div>
+        <h3>Registration</h3>
+        <p>Checking attendees in, managing sign-in lists, and handling first-touch questions at the door.</p>
+        <div class="cta-line">SELECT UNIT →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="form-section" id="volunteer">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag mono">Sign up</div>
+      <h2>Join the crew</h2>
+      <p>Fill this in and you'll get an invite to the volunteer WhatsApp group next.</p>
+    </div>
+
+    <form action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="f9ef1bc9-b9b5-4a80-8889-1c66aaa8867f">
+      <input type="hidden" name="subject" value="New Spark Conference volunteer sign-up">
+      <input type="hidden" name="redirect" value="https://dulcet-medovik-8828bd.netlify.app/thanks.html">
+      <input type="checkbox" name="botcheck" style="display:none;">
+
+      <div class="field">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="Full Name" required>
+      </div>
+
+      <div class="field">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="Email" required>
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone / WhatsApp number</label>
+        <input type="tel" id="phone" name="Phone (WhatsApp)" required>
+      </div>
+
+      <div class="field">
+        <label for="unit">Unit</label>
+        <select id="unit" name="Unit" required>
+          <option value="" disabled selected>Choose a unit</option>
+          <option value="Protocol & Logistics Unit">Protocol &amp; Logistics Unit</option>
+          <option value="Ushering & Crowd Management Unit">Ushering &amp; Crowd Management Unit</option>
+          <option value="Publicity & Media Unit">Publicity &amp; Media Unit</option>
+          <option value="Registration Unit">Registration Unit</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="notes">Anything we should know? (optional)</label>
+        <textarea id="notes" name="Notes"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">Join the crew</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
+    <span>Spark Conference · 30 October 2026</span>
+    <span>Questions? educationinview111@gmail.com</span>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.unit-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.unit-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      document.getElementById('unit').value = card.dataset.unit;
+      document.getElementById('volunteer').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+</script>
+
+</body>
+</html>
