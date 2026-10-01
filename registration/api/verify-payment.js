@@ -1,0 +1,69 @@
+// This file runs on Vercel's server, not in the visitor's browser.
+// It double-checks every payment directly with Paystack before anyone
+// is treated as "paid" — so nobody can fake a ticket.
+ 
+module.exports = async (req, res) => {
+  if (req.method !== 'POST') {
+    res.status(405).json({ success: false, message: 'Method not allowed' });
+    return;
+  }
+ 
+  try {
+    var body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    var reference = body && body.reference;
+    var formData = (body && body.formData) || {};
+ 
+    if (!reference) {
+      res.status(400).json({ success: false, message: 'Missing payment reference' });
+      return;
+    }
+ 
+    var secretKey = process.env.PAYSTACK_SECRET_KEY;
+    if (!secretKey) {
+      res.status(500).json({ success: false, message: 'Server is missing its Paystack secret key' });
+      return;
+    }
+ 
+    // Ask Paystack directly: did this reference really get paid?
+    var verifyResponse = await fetch(
+      'https://api.paystack.co/transaction/verify/' + encodeURIComponent(reference),
+      { headers: { Authorization: 'Bearer ' + secretKey } }
+    );
+    var verifyData = await verifyResponse.json();
+ 
+    var tx = verifyData && verifyData.data;
+    var isPaid = verifyData && verifyData.status && tx && tx.status === 'success';
+    var isRightAmount = tx && tx.amount === 30000 && tx.currency === 'NGN';
+ 
+    if (!isPaid || !isRightAmount) {
+      res.status(400).json({ success: false, message: 'Payment could not be confirmed' });
+      return;
+    }
+ 
+    // Payment confirmed — send Winner the registration details by email.
+    await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: 'f9ef1bc9-b9b5-4a80-8889-1c66aaa8867f',
+        subject: 'New Spark Conference attendee — PAID & VERIFIED',
+        'Full Name': formData.name || '',
+        'Email': formData.email || '',
+        'Phone (WhatsApp)': formData.phone || '',
+        'School': formData.school || '',
+        'Level of Study': formData.level || '',
+        'How they heard about Spark': formData.heard || '',
+        'Expectations': formData.expectations || '',
+        'Payment Reference': reference,
+        'Amount Paid (NGN)': tx.amount / 100
+      })
+    });
+ 
+    res.status(200).json({ success: true, reference: reference });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error while verifying payment' });
+  }
+};
