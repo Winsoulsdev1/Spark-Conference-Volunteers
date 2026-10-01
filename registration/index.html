@@ -373,60 +373,51 @@
     <div class="section-head">
       <div class="section-tag mono">Sign up</div>
       <h2>Register for Spark</h2>
-      <p>Pay ₦300 to the account above first, then fill this in with your payment reference so we can confirm your spot.</p>
+      <p>Fill this in, then tap the pay button. Your ticket is confirmed the moment your payment goes through — no waiting.</p>
     </div>
  
-    <form action="https://api.web3forms.com/submit" method="POST">
-      <input type="hidden" name="access_key" value="f9ef1bc9-b9b5-4a80-8889-1c66aaa8867f">
-      <input type="hidden" name="subject" value="New Spark Conference attendee registration">
-      <input type="hidden" name="redirect" value="https://sparkconferenceregister26.vercel.app/register-thanks.html">
-      <input type="checkbox" name="botcheck" style="display:none;">
- 
+    <form id="regForm">
       <div class="field">
         <label for="name">Full name</label>
-        <input type="text" id="name" name="Full Name" required>
+        <input type="text" id="name" required>
       </div>
  
       <div class="field">
         <label for="email">Email address</label>
-        <input type="email" id="email" name="Email" required>
+        <input type="email" id="email" required>
       </div>
  
       <div class="field">
         <label for="phone">Phone / WhatsApp number</label>
-        <input type="tel" id="phone" name="Phone (WhatsApp)" required>
+        <input type="tel" id="phone" required>
       </div>
  
       <div class="field">
         <label for="school">School / Institution</label>
-        <input type="text" id="school" name="School" required>
+        <input type="text" id="school" required>
       </div>
  
       <div class="field">
         <label for="level">Level of study</label>
-        <input type="text" id="level" name="Level of Study" placeholder="e.g. 100L, SS2, 200 Level" required>
+        <input type="text" id="level" placeholder="e.g. 100L, SS2, 200 Level" required>
       </div>
  
       <div class="field">
         <label for="heard">How did you hear about Spark Conference?</label>
-        <input type="text" id="heard" name="How they heard about Spark" required>
+        <input type="text" id="heard" required>
       </div>
  
       <div class="field">
         <label for="expectations">What are you hoping to get out of Spark Conference?</label>
-        <textarea id="expectations" name="Expectations" required></textarea>
+        <textarea id="expectations" required></textarea>
       </div>
  
-      <div class="field">
-        <label for="reference">Payment reference / transaction details</label>
-        <input type="text" id="reference" name="Payment Reference" placeholder="e.g. time of transfer, sender name, or reference code" required>
-        <div class="hint">Pay ₦300 to the Zenith Bank account above first, then fill this in so we can match your payment.</div>
-      </div>
- 
-      <button type="submit" class="submit-btn">Complete registration</button>
+      <button type="submit" class="submit-btn" id="payBtn">Pay ₦300 &amp; Register</button>
+      <div class="hint" style="margin-top:14px; text-align:center;">Prefer direct bank transfer? Use the account details above, then email your reference to educationinview111@gmail.com — that route is confirmed by hand, so it may take longer.</div>
     </form>
   </div>
 </section>
+ 
  
 <footer>
   <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap; gap:12px;">
@@ -434,7 +425,7 @@
     <span>Questions? educationinview111@gmail.com</span>
   </div>
 </footer>
- 
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
   var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
  
@@ -479,6 +470,74 @@
       sparkFlash(btn, CHECK_ICON + ' Copied!');
     });
   }
+ 
+  // Instant payment + registration
+  (function(){
+    var form = document.getElementById('regForm');
+    if(!form) return;
+    var payBtn = document.getElementById('payBtn');
+    var originalBtnText = payBtn.textContent;
+ 
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(!form.checkValidity()){ form.reportValidity(); return; }
+ 
+      var formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        school: document.getElementById('school').value,
+        level: document.getElementById('level').value,
+        heard: document.getElementById('heard').value,
+        expectations: document.getElementById('expectations').value
+      };
+ 
+      payBtn.disabled = true;
+      payBtn.textContent = 'Opening payment...';
+ 
+      var handler = PaystackPop.setup({
+        key: 'pk_live_4b13524a62f65802a94663d687bb30a00ed04862',
+        email: formData.email,
+        amount: 30000,
+        currency: 'NGN',
+        ref: 'SPARK-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
+        metadata: {
+          custom_fields: [
+            {display_name: "Full Name", variable_name: "full_name", value: formData.name},
+            {display_name: "School", variable_name: "school", value: formData.school}
+          ]
+        },
+        callback: function(response){
+          payBtn.textContent = 'Confirming payment...';
+          fetch('/api/verify-payment', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ reference: response.reference, formData: formData })
+          })
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            if(data.success){
+              window.location.href = 'register-thanks.html?ref=' + encodeURIComponent(response.reference);
+            } else {
+              alert('Your payment went through, but we could not auto-confirm it. Please email educationinview111@gmail.com with this reference so we can sort it manually: ' + response.reference);
+              payBtn.disabled = false;
+              payBtn.textContent = originalBtnText;
+            }
+          })
+          .catch(function(){
+            alert('Your payment went through, but something went wrong confirming it here. Please email educationinview111@gmail.com with this reference: ' + response.reference);
+            payBtn.disabled = false;
+            payBtn.textContent = originalBtnText;
+          });
+        },
+        onClose: function(){
+          payBtn.disabled = false;
+          payBtn.textContent = originalBtnText;
+        }
+      });
+      handler.openIframe();
+    });
+  })();
  
   // Pop the payment box in once it scrolls into view
   (function(){
