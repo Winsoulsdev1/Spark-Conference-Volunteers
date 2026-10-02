@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
  
     var tx = verifyData && verifyData.data;
     var isPaid = verifyData && verifyData.status && tx && tx.status === 'success';
-    var isRightAmount = tx && tx.amount === 30000 && tx.currency === 'NGN';
+    var isRightAmount = tx && tx.amount === 50000 && tx.currency === 'NGN';
  
     if (!isPaid || !isRightAmount) {
       res.status(400).json({ success: false, message: 'Payment could not be confirmed' });
@@ -67,3 +67,4 @@ module.exports = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error while verifying payment' });
   }
 };
+ 
