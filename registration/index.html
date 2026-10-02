@@ -159,22 +159,24 @@
   .info-card.venue .tag{color:var(--coral);}
   .info-card.price .tag{color:var(--yellow); }
  
-  /* ---------- PAYMENT BOX ---------- */
-  .pay-box{
+  /* ---------- PAYSTACK BOX ---------- */
+  .paystack-box{
     position:relative;
     background:var(--ink);
     color:var(--paper);
     border:3px solid var(--ink);
-    padding:32px;
+    padding:36px 32px;
     margin-bottom:60px;
     max-width:560px;
-    box-shadow:6px 6px 0 var(--yellow);
+    text-align:center;
+    box-shadow:6px 6px 0 #00C3F7;
     opacity:0;
     transform:scale(0.7) translateY(40px) rotate(-2deg);
+    cursor:pointer;
   }
-  .pay-box.pop-in{
+  .paystack-box.pop-in{
     animation:payPopIn 0.75s cubic-bezier(.34,1.56,.64,1) forwards,
-              payPulse 2.6s ease-in-out 0.9s 3;
+              payBreathe 3.2s ease-in-out 0.75s infinite;
   }
   @keyframes payPopIn{
     0%{opacity:0; transform:scale(0.7) translateY(40px) rotate(-2deg);}
@@ -182,10 +184,11 @@
     75%{transform:scale(0.97) translateY(2px) rotate(0deg);}
     100%{opacity:1; transform:scale(1) translateY(0) rotate(0deg);}
   }
-  @keyframes payPulse{
-    0%,100%{box-shadow:6px 6px 0 var(--yellow);}
-    50%{box-shadow:9px 9px 0 var(--yellow), 0 0 0 6px rgba(255,206,51,0.25);}
+  @keyframes payBreathe{
+    0%,100%{box-shadow:6px 6px 0 #00C3F7; transform:scale(1);}
+    50%{box-shadow:10px 10px 0 #00C3F7, 0 0 24px 4px rgba(0,195,247,0.35); transform:scale(1.015);}
   }
+  .paystack-box:hover{transform:scale(1.02) !important;}
   .pay-hint{
     position:absolute;
     top:-14px;
@@ -201,34 +204,15 @@
     animation:hintBounce 1.6s ease-in-out infinite;
   }
   @keyframes hintBounce{0%,100%{transform:rotate(3deg) translateY(0);} 50%{transform:rotate(3deg) translateY(-5px);}}
-  .pay-box .tag{color:var(--yellow); font-family:'Space Mono', monospace; font-size:0.75rem; font-weight:700; margin-bottom:14px; display:block;}
-  .pay-row{display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #333;}
-  .pay-row:last-child{border-bottom:none;}
-  .pay-label{color:#9A96A6; font-size:0.85rem; font-weight:600;}
-  .pay-value{font-weight:700; font-size:1rem; font-family:'Space Mono', monospace;}
-  .pay-value-wrap{display:flex; align-items:center; gap:10px;}
-  .copy-btn{
-    background:none; border:none; cursor:pointer; color:var(--yellow);
-    display:inline-flex; align-items:center; padding:5px; border-radius:6px;
-    transition:background 0.15s, transform 0.15s;
-  }
-  .copy-btn:hover{background:rgba(255,255,255,0.1); transform:scale(1.1);}
-  .copy-btn svg{width:16px; height:16px; display:block;}
-  .copy-btn.copied{color:#6CE39A;}
-  .copy-all-btn{
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    width:100%; margin-top:20px; padding:14px;
-    background:var(--yellow); color:var(--ink); border:none;
-    font-weight:800; font-family:'Work Sans', sans-serif; font-size:0.92rem;
-    letter-spacing:0.2px; cursor:pointer; transition:transform 0.12s;
-  }
-  .copy-all-btn:hover{transform:translateY(-2px);}
-  .copy-all-btn:active{transform:translateY(0);}
-  .copy-all-btn svg{width:18px; height:18px;}
-  .copy-all-btn.copied{background:#6CE39A;}
+  .paystack-badge{display:flex; justify-content:center; margin-bottom:18px;}
+  .paystack-mark{width:64px; height:64px; border-radius:16px; box-shadow:0 6px 18px rgba(0,195,247,0.4);}
+  .paystack-box h3{font-family:'Archivo Black', sans-serif; font-weight:400; font-size:1.4rem; margin-bottom:10px;}
+  .paystack-box p{color:#D9D6CC; font-size:0.95rem; line-height:1.5; max-width:400px; margin:0 auto 18px;}
+  .paystack-secure{display:inline-flex; align-items:center; gap:6px; color:#00C3F7; font-family:'Space Mono', monospace; font-size:0.72rem; font-weight:700; letter-spacing:0.3px;}
   @media (prefers-reduced-motion: reduce){
-    .pay-box, .pay-box.pop-in, .pay-hint{animation:none !important; opacity:1; transform:none;}
+    .paystack-box, .paystack-box.pop-in, .pay-hint{animation:none !important; opacity:1; transform:none;}
   }
+ 
  
   /* ---------- FORM ---------- */
   .form-section{
@@ -307,7 +291,7 @@
     <h1>Grab your <span>spot.</span></h1>
     <p>Spark Conference is where students come to get sharper, get connected, and get moving. Secure your seat below.</p>
     <div class="btn-row">
-      <a href="#register" class="btn btn-primary">Register now — ₦300</a>
+      <a href="#register" class="btn btn-primary">Register now — ₦500</a>
       <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Spark%20Conference&dates=20261030/20261031&details=Spark%20Conference%20%E2%80%94%20student%20conference." target="_blank" class="btn">Add to Google Calendar</a>
     </div>
   </div>
@@ -333,37 +317,24 @@
       </div>
       <div class="info-card price">
         <span class="tag mono">Ticket price</span>
-        <h3>₦300</h3>
-        <p>One flat price. Pay by bank transfer, then confirm below.</p>
+        <h3>₦500</h3>
+        <p>One flat price. Pay instantly below with Paystack.</p>
       </div>
     </div>
  
-    <div class="pay-box" id="payBox">
-      <span class="pay-hint">TAP TO COPY</span>
-      <span class="tag mono">Payment details</span>
-      <div class="pay-row"><span class="pay-label">Bank</span><span class="pay-value">Zenith Bank</span></div>
-      <div class="pay-row">
-        <span class="pay-label">Account Number</span>
-        <span class="pay-value-wrap">
-          <span class="pay-value">4204506326</span>
-          <button class="copy-btn" type="button" aria-label="Copy account number" onclick="sparkCopy('4204506326', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg></button>
-        </span>
+    <div class="paystack-box" id="paystackBox" onclick="document.getElementById('register').scrollIntoView({behavior:'smooth'});">
+      <span class="pay-hint">TAP TO PAY</span>
+      <div class="paystack-badge">
+        <svg viewBox="0 0 120 120" class="paystack-mark" aria-hidden="true">
+          <rect width="120" height="120" rx="24" fill="#00C3F7"/>
+          <path d="M34 78V42h14.5c9 0 14.5 5.2 14.5 13.2 0 8-5.6 13.1-14.6 13.1h-6.4V78H34zm8-16.3h5.6c4.5 0 7-2.2 7-6.3 0-4-2.5-6.2-7-6.2H42v12.5z" fill="#fff"/>
+          <path d="M70 78V42h8v36h-8z" fill="#fff"/>
+          <path d="M84 78l10.5-18.3L84.5 42h9.2l6 11 6-11h9l-10 17.4L115 78h-9.3l-6.4-11.4-6.3 11.4H84z" fill="#fff"/>
+        </svg>
       </div>
-      <div class="pay-row">
-        <span class="pay-label">Account Name</span>
-        <span class="pay-value-wrap">
-          <span class="pay-value">Winsouls Onuigbo</span>
-          <button class="copy-btn" type="button" aria-label="Copy account name" onclick="sparkCopy('Winsouls Onuigbo', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg></button>
-        </span>
-      </div>
-      <div class="pay-row">
-        <span class="pay-label">Amount</span>
-        <span class="pay-value-wrap">
-          <span class="pay-value">₦300</span>
-          <button class="copy-btn" type="button" aria-label="Copy amount" onclick="sparkCopy('300', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg></button>
-        </span>
-      </div>
-      <button class="copy-all-btn" type="button" onclick="sparkCopyAll(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path></svg> Copy account number, name &amp; amount</button>
+      <h3>Pay with Paystack</h3>
+      <p>Card or bank transfer — pay right here and your ticket is confirmed the moment it clears. No waiting.</p>
+      <div class="paystack-secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg> Secured by Paystack</div>
     </div>
   </div>
 </section>
@@ -412,8 +383,7 @@
         <textarea id="expectations" required></textarea>
       </div>
  
-      <button type="submit" class="submit-btn" id="payBtn">Pay ₦300 &amp; Register</button>
-      <div class="hint" style="margin-top:14px; text-align:center;">Prefer direct bank transfer? Use the account details above, then email your reference to educationinview111@gmail.com — that route is confirmed by hand, so it may take longer.</div>
+      <button type="submit" class="submit-btn" id="payBtn">Pay ₦500 &amp; Register</button>
     </form>
   </div>
 </section>
@@ -427,49 +397,6 @@
 </footer>
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
-  var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
- 
-  function sparkFlash(btn, copiedHTML){
-    var original = btn.innerHTML;
-    btn.innerHTML = copiedHTML;
-    btn.classList.add('copied');
-    setTimeout(function(){
-      btn.innerHTML = original;
-      btn.classList.remove('copied');
-    }, 1600);
-  }
- 
-  function sparkWriteClipboard(text){
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      return navigator.clipboard.writeText(text);
-    }
-    return new Promise(function(resolve, reject){
-      try{
-        var ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.focus(); ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        resolve();
-      }catch(err){ reject(err); }
-    });
-  }
- 
-  function sparkCopy(text, btn){
-    sparkWriteClipboard(text).then(function(){
-      sparkFlash(btn, CHECK_ICON);
-    });
-  }
- 
-  function sparkCopyAll(btn){
-    var details = 'Zenith Bank\nAccount Number: 4204506326\nAccount Name: Winsouls Onuigbo\nAmount: \u20A6300';
-    sparkWriteClipboard(details).then(function(){
-      sparkFlash(btn, CHECK_ICON + ' Copied!');
-    });
-  }
  
   // Instant payment + registration
   (function(){
@@ -498,7 +425,7 @@
       var handler = PaystackPop.setup({
         key: 'pk_live_4b13524a62f65802a94663d687bb30a00ed04862',
         email: formData.email,
-        amount: 30000,
+        amount: 50000,
         currency: 'NGN',
         ref: 'SPARK-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
         metadata: {
@@ -541,7 +468,7 @@
  
   // Pop the payment box in once it scrolls into view
   (function(){
-    var payBox = document.getElementById('payBox');
+    var payBox = document.getElementById('paystackBox');
     if(!payBox) return;
     if('IntersectionObserver' in window){
       var obs = new IntersectionObserver(function(entries){
