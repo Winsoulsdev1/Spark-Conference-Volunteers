@@ -369,8 +369,13 @@
       </div>
  
       <div class="field">
-        <label for="level">Level of study</label>
-        <input type="text" id="level" placeholder="e.g. 100L, SS2, 200 Level" required>
+        <label for="level">What level of study are you in?</label>
+        <select id="level" required>
+          <option value="" disabled selected>Select one</option>
+          <option value="Secondary School">Secondary School</option>
+          <option value="Undergraduate">Undergraduate</option>
+          <option value="Graduate">Graduate</option>
+        </select>
       </div>
  
       <div class="field">
@@ -404,6 +409,17 @@
     if(!form) return;
     var payBtn = document.getElementById('payBtn');
     var originalBtnText = payBtn.textContent;
+    var levelSelect = document.getElementById('level');
+    if(levelSelect){
+      levelSelect.addEventListener('change', function(){
+        if(this.value === 'Secondary School'){
+          payBtn.textContent = 'Register Free';
+        } else {
+          payBtn.textContent = 'Pay ₦500 & Register';
+        }
+        originalBtnText = payBtn.textContent;
+      });
+    }
  
     form.addEventListener('submit', function(e){
       e.preventDefault();
@@ -418,6 +434,34 @@
         heard: document.getElementById('heard').value,
         expectations: document.getElementById('expectations').value
       };
+ 
+      var isSecondary = document.getElementById('level').value === 'Secondary School';
+ 
+      if(isSecondary){
+        payBtn.disabled = true;
+        payBtn.textContent = 'Registering...';
+        fetch('/api/free-register', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ formData: formData })
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+          if(data.success){
+            window.location.href = 'register-thanks.html?free=1';
+          } else {
+            alert('Something went wrong registering you. Please email educationinview111@gmail.com with your name and school so we can add you manually.');
+            payBtn.disabled = false;
+            payBtn.textContent = originalBtnText;
+          }
+        })
+        .catch(function(){
+          alert('Something went wrong registering you. Please email educationinview111@gmail.com with your name and school so we can add you manually.');
+          payBtn.disabled = false;
+          payBtn.textContent = originalBtnText;
+        });
+        return;
+      }
  
       payBtn.disabled = true;
       payBtn.textContent = 'Opening payment...';
