@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Spark Conference Feedback</title>
+<link rel="icon" href="assets/favicon.png">
+<meta name="description" content="Tell us how Spark Conference was. It takes one minute.">
+<meta property="og:title" content="How was Spark Conference?">
+<meta property="og:description" content="Share your feedback in one minute.">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBF7EE;--ink:#15171C;--card:#fff;--mut:#555;--blu:#2B4BFF;--org:#FF6A1A;--yel:#FFD23F;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1122;--ink:#FBF7EE;--card:#171B33;--mut:#B8BCD6}}
+:root[data-theme="dark"]{--bg:#0E1122;--ink:#FBF7EE;--card:#171B33;--mut:#B8BCD6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Poppins,system-ui,sans-serif;padding:20px 18px 40px;max-width:560px;margin:0 auto}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:700}
+.logo{width:120px;display:block}.tag{display:inline-block;background:var(--ink);color:var(--bg);padding:7px 14px;font-size:12px;letter-spacing:.08em;transform:rotate(-2deg);margin:10px 0 6px}
+h1{font-weight:800;font-size:36px;line-height:1.05;letter-spacing:-.035em;margin:8px 0 6px}h1 span{background:var(--blu);color:#fff;padding:0 10px;display:inline-block}
+p.sub{color:var(--mut);font-size:15px;margin-bottom:18px}
+.q{background:var(--card);border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:16px;margin-bottom:20px}
+.q label.t{display:block;font-weight:800;font-size:17px;margin-bottom:12px;letter-spacing:-.01em}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.opt{flex:1 1 auto;min-width:54px;border:3px solid var(--ink);background:var(--bg);color:var(--ink);font:700 15px 'JetBrains Mono',monospace;padding:12px 10px;cursor:pointer;text-align:center}
+.opt[aria-pressed=true]{background:var(--yel);color:#15171C;box-shadow:3px 3px 0 var(--ink)}
+.stars .opt{font-size:22px;padding:12px 0}
+textarea,input[type=text]{width:100%;border:3px solid var(--ink);background:var(--bg);color:var(--ink);font:500 16px Poppins,sans-serif;padding:12px;border-radius:0}
+textarea{min-height:90px;resize:vertical}input[type=text]{margin-bottom:10px}
+.btn{display:block;width:100%;border:3px solid var(--ink);background:var(--org);color:#fff;font:800 17px 'JetBrains Mono',monospace;letter-spacing:.04em;padding:16px;cursor:pointer;box-shadow:6px 6px 0 var(--ink);margin-bottom:14px}
+.btn.alt{background:var(--card);color:var(--ink)}
+.ok{display:none;background:var(--yel);color:#15171C;border:3px solid var(--ink);padding:14px;font-weight:600;margin-top:6px}
+.foot{text-align:center;font-size:12px;color:var(--mut);margin-top:18px;letter-spacing:.1em}
+</style></head><body>
+<img class="logo" alt="Spark Conference" src="assets/logo.png">
+<div class="tag mono">SPARK CONFERENCE · UYO</div>
+<h1>How was <span>Spark?</span></h1>
+<p class="sub">Tell us what you think. It takes about one minute and helps us make the next one better.</p>
+<div class="q"><label class="t">1. Rate the conference</label><div class="row stars" data-k="rating"><button class="opt" data-v="1">1</button><button class="opt" data-v="2">2</button><button class="opt" data-v="3">3</button><button class="opt" data-v="4">4</button><button class="opt" data-v="5">5</button></div><p class="sub" style="margin:8px 0 0;font-size:12px">1 = poor, 5 = excellent</p></div>
+<div class="q"><label class="t">2. Which session did you enjoy most?</label><div class="row" data-k="session"><button class="opt" data-v="Tech Session">Tech</button><button class="opt" data-v="Interactive Session">Interactive</button><button class="opt" data-v="Spoken Word Session">Spoken Word</button><button class="opt" data-v="Discussion Session">Discussion</button><button class="opt" data-v="Refreshment &amp; Networking">Refreshment &amp; Networking</button></div></div>
+<div class="q"><label class="t">3. Would you come again?</label><div class="row" data-k="again"><button class="opt" data-v="Yes">Yes</button><button class="opt" data-v="Maybe">Maybe</button><button class="opt" data-v="No">No</button></div></div>
+<div class="q"><label class="t">4. What did you enjoy most?</label><textarea id="good" placeholder="Tell us what worked for you"></textarea></div>
+<div class="q"><label class="t">5. What should we do better?</label><textarea id="better" placeholder="Be honest, we can take it"></textarea></div>
+<div class="q"><label class="t">6. About you (optional)</label><input type="text" id="name" placeholder="Your name"><input type="text" id="school" placeholder="School / University" style="margin-bottom:0"></div>
+<button class="btn" id="wa">SEND ON WHATSAPP →</button>
+<button class="btn alt" id="cp">COPY MY FEEDBACK</button>
+<div class="ok" id="ok"></div>
+<p class="foot mono">IGNITING MINDS. SHAPING FUTURES.</p>
+<script>
+const NUM="2349130627542";/* WhatsApp number that receives the feedback: digits only, with country code (234...) */
+const A={};document.querySelectorAll('.row[data-k]').forEach(r=>r.addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;r.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');A[r.dataset.k]=b.dataset.v}));
+const $=id=>document.getElementById(id);
+function msg(){return ["SPARK CONFERENCE FEEDBACK","Rating (1-5): "+(A.rating||"-"),"Best session: "+(A.session||"-"),"Would come again: "+(A.again||"-"),"Enjoyed most: "+($("good").value.trim()||"-"),"Should do better: "+($("better").value.trim()||"-"),"Name: "+($("name").value.trim()||"-"),"School: "+($("school").value.trim()||"-")].join("\n")}
+function note(t){const o=$("ok");o.style.display="block";o.textContent=t}
+$("wa").onclick=()=>{if(!A.rating){note("Please pick a rating from 1 to 5 first.");return}window.open("https://wa.me/"+NUM+"?text="+encodeURIComponent(msg()),"_blank");note("Opening WhatsApp… just tap send.");setTimeout(()=>{location.href="thank-you.html"},900)};
+$("cp").onclick=async()=>{if(!A.rating){note("Please pick a rating from 1 to 5 first.");return}try{await navigator.clipboard.writeText(msg());note("Copied! Paste it in WhatsApp and send it to us.");setTimeout(()=>{location.href="thank-you.html"},1600)}catch(e){note("Could not copy. Please use the WhatsApp button.")}};
+</script></body></html>

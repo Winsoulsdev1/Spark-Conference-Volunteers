@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Thank you · Spark Conference</title>
+<link rel="icon" href="assets/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBF7EE;--ink:#15171C;--card:#fff;--mut:#555;--blu:#2B4BFF;--org:#FF6A1A;--yel:#FFD23F;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#0E1122;--ink:#FBF7EE;--card:#171B33;--mut:#B8BCD6}}
+*{box-sizing:border-box;margin:0}html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:Poppins,system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:28px 20px;position:relative;overflow-x:hidden}
+.wrap{max-width:520px;width:100%;position:relative;z-index:2}
+.logo{width:150px;display:block;margin-bottom:6px}.mono{font-family:'JetBrains Mono',monospace;font-weight:700}
+.tag{display:inline-block;background:var(--ink);color:var(--bg);padding:7px 14px;font-size:12px;letter-spacing:.08em;transform:rotate(-2deg);margin:8px 0 10px}
+h1{font-weight:800;font-size:clamp(54px,17vw,92px);line-height:.95;letter-spacing:-.05em}h1 span{background:var(--blu);color:#fff;padding:0 14px;display:inline-block;margin-top:6px}
+p{font-size:18px;line-height:1.45;margin:18px 0 22px}
+.card{background:var(--card);border:3px solid var(--ink);box-shadow:7px 7px 0 var(--ink);padding:16px 18px;margin-bottom:22px;font-weight:600}
+.card b{color:var(--org)}
+.btn{display:inline-block;border:3px solid var(--ink);background:var(--yel);color:#15171C;font:800 15px 'JetBrains Mono',monospace;letter-spacing:.04em;padding:14px 20px;text-decoration:none;box-shadow:5px 5px 0 var(--ink)}
+.foot{margin-top:26px;font-size:12px;color:var(--mut);letter-spacing:.12em}
+.sun{position:fixed;right:-120px;top:-120px;width:320px;height:320px;border-radius:50%;background:var(--yel);z-index:0}
+.cf{position:fixed;top:-20px;width:12px;height:12px;border-radius:50%;z-index:1;opacity:.9;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.9}}
+@media (prefers-reduced-motion:reduce){.cf{display:none}}
+</style></head><body>
+<div class="sun"></div>
+<div class="wrap">
+ <img class="logo" src="assets/logo.png" alt="Spark Conference">
+ <div class="tag mono">REVIEW RECEIVED</div>
+ <h1>Thank<br><span>you!</span></h1>
+ <p>Thank you for taking the time to review <b>Spark Conference</b>. Your feedback goes straight to the team and helps us make the next one even better.</p>
+ <div class="card">Every answer counts. We read all of them. <b>See you at the next Spark.</b></div>
+ <a class="btn" href="index.html">← BACK TO FORM</a>
+ <p class="foot mono">IGNITING MINDS. SHAPING FUTURES.</p>
+</div>
+<script>
+const C=['#FFD23F','#FF6A1A','#2B4BFF','#FF5A36','#FBD5CB'];
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches)for(let i=0;i<60;i++){const d=document.createElement('div');d.className='cf';const s=8+Math.random()*12;d.style.cssText=`left:${Math.random()*100}vw;width:${s}px;height:${s}px;background:${C[i%5]};animation-duration:${3+Math.random()*3}s;animation-delay:${Math.random()*1.5}s`;document.body.appendChild(d)}
+</script></body></html>
