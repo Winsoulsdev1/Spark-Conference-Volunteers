@@ -448,7 +448,7 @@
         .then(function(r){ return r.json(); })
         .then(function(data){
           if(data.success){
-            window.location.href = 'register-thanks.html?free=1';
+            window.location.href = 'register-thanks.html?free=1&name=' + encodeURIComponent(formData.name) + '&level=' + encodeURIComponent(formData.level);
           } else {
             alert('Something went wrong registering you. Please email educationinview111@gmail.com with your name and school so we can add you manually.');
             payBtn.disabled = false;
@@ -488,7 +488,7 @@
           .then(function(r){ return r.json(); })
           .then(function(data){
             if(data.success){
-              window.location.href = 'register-thanks.html?ref=' + encodeURIComponent(response.reference);
+              window.location.href = 'register-thanks.html?ref=' + encodeURIComponent(response.reference) + '&name=' + encodeURIComponent(formData.name) + '&level=' + encodeURIComponent(formData.level);
             } else {
               alert('Your payment went through, but we could not auto-confirm it. Please email educationinview111@gmail.com with this reference so we can sort it manually: ' + response.reference);
               payBtn.disabled = false;
