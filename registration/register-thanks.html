@@ -99,7 +99,7 @@
   .download-btn:hover{transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--paper);}
  
   .book-pop{
-    position:fixed; right:18px; bottom:18px; z-index:50;
+    position:relative; flex:none;
     width:330px; max-width:calc(100% - 36px);
     background:var(--yellow); color:var(--ink);
     border:3px solid var(--paper); border-radius:10px;
@@ -146,11 +146,66 @@
     position:absolute; top:6px; right:8px; background:none; border:none;
     font-size:1.3rem; line-height:1; cursor:pointer; color:var(--ink); padding:4px 6px;
   }
-  @media (max-width:700px){
-    .card{margin-bottom:190px;}
+  @media (max-width:760px){
+    .card{margin-bottom:420px;}
+    .pop-stack{flex-direction:column; align-items:stretch;}
+    .book-pop, .venue-pop{width:100%; max-width:none;}
+    .book-cover{width:72px; height:90px;}
   }
   @media (prefers-reduced-motion: reduce){
-    .book-pop{animation:none; opacity:1; transform:none;}
+    .book-pop, .venue-pop{animation:none; opacity:1; transform:none;}
+  }
+ 
+  .pop-stack{
+    position:fixed; left:18px; right:18px; bottom:18px; z-index:50;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    gap:12px; pointer-events:none;
+  }
+  .pop-stack > *{pointer-events:auto;}
+  .venue-pop{
+    position:relative; flex:none; width:330px; max-width:calc(100% - 36px);
+    background:var(--paper); color:var(--ink);
+    border:3px solid var(--yellow); border-radius:10px;
+    padding:16px 18px; text-align:left;
+    box-shadow:6px 6px 0 var(--blue);
+    opacity:0; transform:scale(0.6) translateY(40px);
+    animation:bookPopIn 0.7s cubic-bezier(.34,1.56,.64,1) 1s forwards,
+              venueBreathe 2.8s ease-in-out 1.8s infinite;
+  }
+  @keyframes venueBreathe{
+    0%,100%{transform:scale(1); box-shadow:6px 6px 0 var(--blue);}
+    50%{transform:scale(1.03); box-shadow:9px 9px 0 var(--blue);}
+  }
+  .venue-tag{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--blue); color:var(--paper);
+    font-family:'Space Mono', monospace; font-size:0.68rem; font-weight:700;
+    letter-spacing:0.08em; padding:4px 9px; margin-bottom:9px;
+    transform:rotate(-2deg);
+  }
+  .venue-tag svg{width:11px; height:13px;}
+  .venue-title{
+    font-family:'Archivo Black', sans-serif; font-size:1.2rem;
+    line-height:1.15; margin-bottom:5px; padding-right:16px;
+  }
+  .venue-sub{font-size:0.8rem; font-weight:600; line-height:1.4; margin-bottom:12px;}
+  .venue-actions{display:flex; gap:8px;}
+  .venue-btn{
+    flex:1; display:block; text-align:center; text-decoration:none;
+    font-weight:800; font-size:0.78rem; line-height:1.2;
+    padding:11px 8px; border-radius:6px; white-space:nowrap;
+    border:2px solid var(--ink); background:var(--paper); color:var(--ink);
+  }
+  .venue-btn.primary{background:var(--ink); color:var(--paper);}
+  #venueRemind{flex:1.45;}
+ 
+  @media (max-width:760px){
+    .card{margin-bottom:340px;}
+    .venue-pop, .book-pop{width:100%; max-width:none;}
+    .venue-pop{padding:12px 16px;}
+    .book-pop{padding:12px 16px;}
+    .venue-pop.venue-ready .venue-sub{display:none;}
+    .venue-pop.venue-ready .venue-title{margin-bottom:10px;}
   }
 </style>
 </head>
@@ -164,7 +219,7 @@
     <div class="notice" id="refNotice" style="display:none;">
       <strong>Payment reference:</strong> <span id="refValue"></span>
     </div>
-    <div class="notice">
+    <div class="notice" id="nextNotice">
       <strong>What happens next:</strong> keep an eye on your email — we'll send the venue as soon as it's locked in.
     </div>
     <script>
@@ -436,6 +491,17 @@
     <footer>Questions? educationinview111@gmail.com</footer>
   </div>
  
+  <div class="pop-stack">
+  <div class="venue-pop" id="venuePop">
+    <button class="book-close" id="venueClose" aria-label="Close">&times;</button>
+    <span class="venue-tag"><svg viewBox="0 0 12 14" fill="currentColor"><path d="M6 0C2.7 0 0 2.6 0 5.8 0 10 6 14 6 14s6-4 6-8.2C12 2.6 9.3 0 6 0zm0 8a2.2 2.2 0 1 1 0-4.4A2.2 2.2 0 0 1 6 8z"/></svg>VENUE</span>
+    <div class="venue-title" id="venueTitle">Venue coming soon</div>
+    <div class="venue-sub" id="venueSub">We will send the exact location and a map to your email as soon as it is confirmed.</div>
+    <div class="venue-actions" id="venueActions" style="display:none;">
+      <a class="venue-btn primary" id="venueDirections" target="_blank" rel="noopener">Get directions</a>
+      <a class="venue-btn" id="venueRemind" download="spark-conference-reminder.ics">Remind me &middot; 8:30 AM</a>
+    </div>
+  </div>
   <div class="book-pop" id="bookPop">
     <button class="book-close" id="bookClose" aria-label="Close">&times;</button>
     <div class="book-row">
@@ -447,6 +513,7 @@
       </div>
     </div>
     <a class="book-cta" href="https://selar.com/0to8805252" target="_blank" rel="noopener">Get the book</a>
+  </div>
   </div>
   <script>
     var BOOK_COVER = 'data:image/jpeg;base64,' + [
@@ -674,5 +741,103 @@
       document.getElementById('bookPop').style.display = 'none';
     });
   </script>
+ 
+  <script>
+    /* ============================================================
+       SET THE VENUE HERE once it is confirmed. Fill in the quotes.
+       - name:    the hall or place name, e.g. "Ibom Hall"
+       - address: the full address, e.g. "Ibom Hall, Uyo, Akwa Ibom"
+       - mapsUrl: OPTIONAL. Paste a Google Maps link if you have one.
+       Leave all three empty and the card says "Venue coming soon".
+       ============================================================ */
+    var SPARK_VENUE = {
+      name: "The Believers Forum Hall",
+      address: "Victory Cathedral, Uyo",
+      mapsUrl: "https://www.google.com/maps/place/Victory+Cathedral/@5.0207451,7.92293,14z/data=!4m6!3m5!1s0x105d576cee37ccb3:0xbf075173367073cf!8m2!3d5.0120923!4d7.9529948!16s%2Fg%2F11q99f3mhn"
+    };
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      var V = (typeof SPARK_VENUE !== 'undefined') ? SPARK_VENUE : {};
+      var name = (V.name || '').trim();
+      var address = (V.address || '').trim();
+      var mapsUrl = (V.mapsUrl || '').trim();
+      var configured = !!(name || address || mapsUrl);
+ 
+      var loc = (name && address &&
+        address.toLowerCase().indexOf(name.toLowerCase()) !== -1)
+        ? address : [name, address].filter(Boolean).join(', ');
+      var directionsUrl = mapsUrl ||
+        (configured ? 'https://www.google.com/maps/dir/?api=1&destination=' +
+          encodeURIComponent(address || name) : '');
+ 
+      var desc = 'Spark Conference starts at 9:00 AM. Please arrive by 8:30 AM.' +
+        ' Theme: The Future Is Calling.';
+      desc += configured ? ' Directions: ' + directionsUrl
+                         : ' Check your email for the venue.';
+ 
+      /* Google Calendar button: timed event at 8:30 AM (Lagos time) */
+      var gcal = document.querySelector('a.btn[href*="calendar.google.com"]');
+      if(gcal){
+        var g = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
+          '&text=' + encodeURIComponent('Spark Conference - arrive by 8:30 AM') +
+          '&dates=20261030T073000Z/20261030T104500Z' +
+          '&details=' + encodeURIComponent(desc);
+        if(loc){ g += '&location=' + encodeURIComponent(loc); }
+        gcal.href = g;
+      }
+ 
+      if(!configured){ return; }
+ 
+      document.getElementById('venuePop').classList.add('venue-ready');
+      document.getElementById('venueTitle').textContent = name || address;
+      document.getElementById('venueSub').textContent =
+        'Spark Conference \u00b7 30 Oct \u00b7 9:00 AM. Tap for directions, and set a phone reminder for 8:30 AM.';
+      document.getElementById('venueActions').style.display = 'flex';
+      document.getElementById('venueDirections').href = directionsUrl;
+ 
+      var nn = document.getElementById('nextNotice');
+      if(nn){
+        nn.innerHTML = '<strong>What happens next:</strong> tap the venue card for ' +
+          'directions, and set your reminder for 30 October at 8:30 AM.';
+      }
+ 
+      function esc(s){
+        return String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;')
+                        .replace(/,/g, '\\,').replace(/\n/g, '\\n');
+      }
+      var stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      var ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Spark Conference//Reminder//EN',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        'UID:spark-conference-2026-reminder@sparkconference',
+        'DTSTAMP:' + stamp,
+        'DTSTART:20261030T073000Z',
+        'DTEND:20261030T104500Z',
+        'SUMMARY:' + esc('Spark Conference - arrive by 8:30 AM'),
+        'LOCATION:' + esc(loc),
+        'DESCRIPTION:' + esc(desc),
+        'URL:' + directionsUrl,
+        'BEGIN:VALARM',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:' + esc('Spark Conference: time to head to the venue.'),
+        'TRIGGER:PT0S',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+      document.getElementById('venueRemind').href =
+        'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+    });
+ 
+    document.getElementById('venueClose').addEventListener('click', function(){
+      document.getElementById('venuePop').style.display = 'none';
+    });
+  </script>
 </body>
 </html>
+ 
